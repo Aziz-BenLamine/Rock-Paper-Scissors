@@ -1,67 +1,86 @@
+/*getComputerChoice*/
+/*getPlayerChoice*/
+/*printOutWinner*/
 
-const playingElements = ["rock", "paper", "scissors"]
 function getComputerChoice(){
-    let computerChoice = playingElements[Math.floor(Math.random() * 3)];
-    return computerChoice;
-}
-
-function getPlayerChoice(){
-    let validInput = false;
-    while(validInput == false){
-        let playerSelection = prompt("Select an element");
-        if (playerSelection == null){
-            continue;
-        }
-        else if (playingElements.includes(playerSelection.toLowerCase())){
-            return playerSelection;
-        }
+    let choice = Math.floor(Math.random() * 3)
+    switch(choice){
+        case 0:
+            return "rock";
+            break
+        case 1:
+            return "paper";
+            break
+        case 2:
+            return "scissors";
+            break
+        default:
+            return "ERROR";
     }
+    return 0;
+};
+
+function updateScore(pScore, cScore){
+    const playerScore = document.querySelector('.player-score p');
+    const computerScore = document.querySelector('.computer-score p');
+    playerScore.textContent = pScore;
+    computerScore.textContent = cScore;
 }
 
-function playRound(computerChoice, playerChoice){
-    let result;
+function playRound(playerChoice, computerChoice, pScore, cScore){
+    const winner = document.querySelector('.winner');
     if (playerChoice == computerChoice){
-        result = "Tie";
+        winner.textContent = "Tie !";
+        updateScore(pScore, cScore);
     }
-    else if((playerChoice == "rock" && computerChoice == "scissors") || (playerChoice == "paper" && computerChoice == "rock") || (playerChoice == "scissors" && computerChoice == "paper")){
-        result = "Win";
+    else if ((playerChoice == "paper" && computerChoice == "rock") || (playerChoice == "rock" && computerChoice == "scissors") || (playerChoice == "scissors" && computerChoice == "paper")){
+        winner.textContent = "You Win!";
+        pScore += 1;
+        updateScore(pScore, cScore);
     }
     else{
-        result = "Lose";
+        winner.textContent = "Computer Wins!";
+        cScore += 1;
+        updateScore(pScore, cScore);
     }
-    return result;
 }
 
 function game(){
-    console.log("Rock Paper Scissors Game");
-    let playerScore = 0;
-    let computerScore = 0;
-    for (let i = 0; i < 5; i++){
-        let computerChoice = getComputerChoice();
-        let playerChoice = getPlayerChoice();
-        let result = playRound(computerChoice, playerChoice);
-        if (result == "Tie"){
-            console.log(`Round ${i}: Tie!`);
-            playerScore += 1;
-            computerScore +=1;
-        }
-        else if(result == "Win"){
-            console.log(`Round ${i}: You ${result}! ${playerChoice} beats ${computerChoice}`);
-            playerScore += 1;
-        }
-        else{
-            console.log(`Round ${i}: You ${result}! ${computerChoice} beats ${playerChoice}`);
-            computerScore +=1
-        }
-    }
-    if (playerScore == computerScore){
-        console.log("This game is a Tie !");
-    }
-    else if (playerScore > computerScore){
-        console.log("You win this games !");
-    }
-    else{
-        console.log("You lose this game !");
-    }
-}
-game()
+    //Score is buggy
+    let pScore = 0;
+    let cScore = 0;
+    const startGame = () =>{
+        const playBtn = document.querySelector('.intro button');
+        const introScreen = document.querySelector('.intro');
+        const match = document.querySelector('.match');
+
+        playBtn.addEventListener('click', () =>{
+            introScreen.classList.add('fadeOut');
+            match.classList.add('fadeIn');
+        });
+    };
+    const playMatch = () => {
+        const options = document.querySelectorAll('.options button');
+        const playerHand = document.querySelector('.player-hand');
+        const computerHand = document.querySelector('.computer-hand');
+
+        options.forEach(option => {
+            option.addEventListener('click', function(){
+                //Get computer Choice
+                const computerChoice = getComputerChoice();
+                
+                //Update scores (buggy)
+                playRound(this.textContent, computerChoice, pScore, cScore);
+
+                //Update Hands Images
+                playerHand.src = `./images/${this.textContent}.png`;
+                computerHand.src = `./images/${computerChoice}.png`
+            })
+        })
+        
+    };
+    startGame();
+    playMatch();
+};
+
+game();
