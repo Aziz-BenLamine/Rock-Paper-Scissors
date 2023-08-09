@@ -31,18 +31,19 @@ function playRound(playerChoice, computerChoice, pScore, cScore){
     const winner = document.querySelector('.winner');
     if (playerChoice == computerChoice){
         winner.textContent = "Tie !";
-        updateScore(pScore, cScore);
     }
-    else if ((playerChoice == "paper" && computerChoice == "rock") || (playerChoice == "rock" && computerChoice == "scissors") || (playerChoice == "scissors" && computerChoice == "paper")){
+    else if ((playerChoice == "paper" && computerChoice == "rock") ||
+             (playerChoice == "rock" && computerChoice == "scissors") ||
+             (playerChoice == "scissors" && computerChoice == "paper")){
         winner.textContent = "You Win!";
         pScore += 1;
-        updateScore(pScore, cScore);
     }
     else{
         winner.textContent = "Computer Wins!";
         cScore += 1;
-        updateScore(pScore, cScore);
     }
+    updateScore(pScore, cScore);
+    return [pScore, cScore];
 }
 
 function game(){
@@ -69,8 +70,10 @@ function game(){
                 //Get computer Choice
                 const computerChoice = getComputerChoice();
                 
-                //Update scores (buggy)
-                playRound(this.textContent, computerChoice, pScore, cScore);
+                //Update scores
+                let updateScores = playRound(this.textContent, computerChoice, pScore, cScore);
+                pScore = updateScores[0];
+                cScore = updateScores[1];
 
                 //Update Hands Images
                 playerHand.src = `./images/${this.textContent}.png`;
