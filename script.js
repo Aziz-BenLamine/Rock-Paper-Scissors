@@ -47,7 +47,6 @@ function playRound(playerChoice, computerChoice, pScore, cScore){
 }
 
 function game(){
-    //Score is buggy
     let pScore = 0;
     let cScore = 0;
     const startGame = () =>{
